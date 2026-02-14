@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #ff758c, #ff7eb3);
+}
+
+#gift {
+    font-size: 120px;
+    cursor: pointer;
+    margin-top: 18vh;
+}
+
+#tapText {
+    font-size: 24px;
+    color: white;
+}
+
+#countdown {
+    display: none;
+    font-size: 60px;
+    color: white;
+    margin-top: 20px;
+}
+
+#questionBox {
+    display: none;
+    color: white;
+}
+
+button {
+    font-size: 20px;
+    padding: 12px 24px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#yesBtn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#noBtn {
+    position: absolute;
+    background-color: #f44336;
+    color: white;
+}
+
+#fireworksCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+#finalText {
+    display: none;
+    position: absolute;
+    top: 45%;
+    width: 100%;
+    font-size: 40px;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" src="high-on-you.mp3"></audio>
+
+<div id="gift">🎁</div>
+<div id="tapText">Tap the gift 🎀</div>
+
+<div id="countdown">3</div>
+
+<div id="questionBox">
+    <h2>Frances Andrea Caburnay, will you be my Valentine? ❤️</h2>
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 🙈</button>
+</div>
+
+<div id="finalText">🎆 Perfect choice ❤️ 🎆</div>
+<canvas id="fireworksCanvas"></canvas>
+
+<script>
+const gift = document.getElementById("gift");
+const tapText = document.getElementById("tapText");
+const countdown = document.getElementById("countdown");
+const questionBox = document.getElementById("questionBox");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const finalText = document.getElementById("finalText");
+const music = document.getElementById("music");
+
+// Gift click
+gift.onclick = () => {
+    gift.innerHTML = "<img src='yourphoto.jpg' width='200' style='border-radius:20px'>";
+    tapText.style.display = "none";
+    music.play();
+    startCountdown();
+};
+
+// Countdown
+function startCountdown() {
+    let count = 3;
+    countdown.style.display = "block";
+    const interval = setInterval(() => {
+        countdown.textContent = count;
+        count--;
+        if (count < 0) {
+            clearInterval(interval);
+            countdown.style.display = "none";
+            questionBox.style.display = "block";
+        }
+    }, 1000);
+}
+
+// Move NO button
+function moveNoButton() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 60);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("click", moveNoButton);
+
+// YES clicked
+yesBtn.onclick = () => {
+    questionBox.style.display = "none";
+    launchFireworks();
+    finalText.style.display = "block";
+};
+
+// Fireworks animation
+const canvas = document.getElementById("fireworksCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function launchFireworks() {
+    let particles = [];
+
+    for (let i = 0; i < 120; i++) {
+        particles.push({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            angle: Math.random() * 2 * Math.PI,
+            speed: Math.random() * 6 + 2,
+            radius: 3
+        });
+    }
+
+    function animate() {
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.x += Math.cos(p.angle) * p.speed;
+            p.y += Math.sin(p.angle) * p.speed;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = "white";
+            ctx.fill();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+}
+</script>
+
+</body>
+</html>
